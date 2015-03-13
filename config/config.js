@@ -46,7 +46,7 @@ var config = {
 		},
 		app: {
 			name: 'PubliBike Events',
-			interval: 30000
+			interval: 300000
 		}
 	}
 };
