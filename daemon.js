@@ -1,15 +1,11 @@
-var iFluxClient = require('iflux-node-client').Client;
-var Event = require('iflux-node-client').Event;
-var RestClient = require('node-rest-client').Client;
-var restClient = new RestClient();
-var Keen = require('keen.io');
+var
+	_ = require('underscore'),
+	iFluxClient = require('iflux-node-client').Client,
+	Event = require('iflux-node-client').Event,
+	restClient = new (require('node-rest-client').Client)(),
+	config = require('./config/config');
 
-var keenClient = Keen.configure({
-  projectId: "54c647ae59949a27dfbc01c4",
-  writeKey: "4baa1100fbc3a6bfc7523961689ed43b92957bdc699bbfab8f81e5c9ea26cae0dcf41a7fba5ca52436c947969dc40f36fcee944db1557b65c13b8531f6ff942359a11d071a4e3d79b5a701d4d98a2b4b38767a7aee21fc347bf29d12478e9f2f0199043fde5e5c4d2412c4a6fb7a956d"
-});
-
-var iFluxClient = new iFluxClient("https://iflux.herokuapp.com");
+var iFluxClient = new iFluxClient(config.iflux.url, 'publibike/eventSource');
 var delay = 1000 * 60 * 5;
 
 var publibikeApiEndpoint = "https://www.publibike.ch/myinterfaces/terminals.fr.json?filterid=0&stationArrow=show%20all%20stations";
@@ -85,9 +81,6 @@ var poll = function (callback) {
       return results;
     }, []);
 
-    //console.log("Last snapshot: ");
-    //console.log(lastSnapshot);
-
     lastSnapshot = summary;
     console.log(delta);
     callback(delta);
@@ -96,23 +89,18 @@ var poll = function (callback) {
 
 var monitorBikes = function () {
   poll(function (movements) {
-    for (var i = 0; i < movements.length; i++) {
-      var event = new Event("io.iflux.events.citybike-event", movements[i]);
-      console.log(event);
-      iFluxClient.notifyEvent(event);
+		var events = [];
 
-      // send single event to Keen IO
-      keenClient.addEvent("terminalEvents", movements[i], function (err, res) {
-        if (err) {
-          console.log("Oh no, an error!");
-        } else {
-          console.log("Hooray, it worked!");
-        }
-      });
-    }
+		_.each(movements, function(movement) {
+			var event = new Event('movementEvent', movement);
+			console.log(event);
+			events.push(event);
+		});
+
+		iFluxClient.notifyEvents(events);
   });
 };
 
 
 monitorBikes();
-setInterval(monitorBikes, 10000);
+setInterval(monitorBikes, 30000);
