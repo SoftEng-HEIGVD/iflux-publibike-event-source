@@ -18,7 +18,13 @@ var poll = function (callback) {
 
     // PubliBike does not send application/json in the Content-type header, so rest client does not parse automatically
     if (typeof data === "string") {
-      data = JSON.parse(data);
+      try {
+				data = JSON.parse(data);
+			}
+			catch (err) {
+				console.log(err);
+				return lastSnapshot;
+			}
     }
 
     terminals = data.terminals;
@@ -82,7 +88,6 @@ var poll = function (callback) {
     }, []);
 
     lastSnapshot = summary;
-    console.log(delta);
     callback(delta);
   });
 };
@@ -92,15 +97,19 @@ var monitorBikes = function () {
 		var events = [];
 
 		_.each(movements, function(movement) {
-			var event = new Event('movementEvent', movement);
-			console.log(event);
-			events.push(event);
+			events.push(new Event('movementEvent', movement));
 		});
 
-		iFluxClient.notifyEvents(events);
+		if (events.length > 0) {
+			console.log(events);
+			iFluxClient.notifyEvents(events);
+		}
+		else {
+			console.log("No events");
+		}
   });
 };
 
 
 monitorBikes();
-setInterval(monitorBikes, 30000);
+setInterval(monitorBikes, config.app.interval);

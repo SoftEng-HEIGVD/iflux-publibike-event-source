@@ -12,7 +12,8 @@ var config = {
 			url: process.env.IFLUX_SERVER_URL || 'https://iflux.herokuapp.com'
 		},
     app: {
-      name: 'PubliBike Events'
+      name: 'PubliBike Events',
+			interval: 10000
     }
   },
 
@@ -22,7 +23,8 @@ var config = {
 			url: process.env.IFLUX_SERVER_URL || 'https://iflux.herokuapp.com'
 		},
   	app: {
-    	name: 'PubliBike Events'
+    	name: 'PubliBike Events',
+			intervall: 10000
   	}
 	},
 
@@ -32,7 +34,8 @@ var config = {
 			url: process.env.IFLUX_SERVER_URL || 'https://iflux.herokuapp.com'
 		},
 		app: {
-			name: 'PubliBike Events'
+			name: 'PubliBike Events',
+			interval: 600000
 		}
   },
 
@@ -42,7 +45,8 @@ var config = {
 			url: process.env.IFLUX_SERVER_URL || 'https://iflux.herokuapp.com'
 		},
 		app: {
-			name: 'PubliBike Events'
+			name: 'PubliBike Events',
+			interval: 30000
 		}
 	}
 };
