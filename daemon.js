@@ -1,9 +1,16 @@
 var
 	_ = require('underscore'),
+	domain = require('domain'),
+	d = domain.create(),
 	iFluxClient = require('iflux-node-client').Client,
 	Event = require('iflux-node-client').Event,
 	restClient = new (require('node-rest-client').Client)(),
 	config = require('./config/config');
+
+d.on('error', function(err) {
+	console.log("Unable to poll publibike data.");
+	console.log(err);
+});
 
 var iFluxClient = new iFluxClient(config.iflux.url, 'publibike/eventSource');
 var delay = 1000 * 60 * 5;
@@ -93,23 +100,24 @@ var poll = function (callback) {
 };
 
 var monitorBikes = function () {
-  poll(function (movements) {
-		var events = [];
+  d.run(function() {
+		poll(function (movements) {
+			var events = [];
 
-		_.each(movements, function(movement) {
-			events.push(new Event('movementEvent', movement));
+			_.each(movements, function (movement) {
+				events.push(new Event('movementEvent', movement));
+			});
+
+			if (events.length > 0) {
+				console.log(events);
+				iFluxClient.notifyEvents(events);
+			}
+			else {
+				console.log("No events");
+			}
 		});
-
-		if (events.length > 0) {
-			console.log(events);
-			iFluxClient.notifyEvents(events);
-		}
-		else {
-			console.log("No events");
-		}
-  });
+	});
 };
-
 
 monitorBikes();
 setInterval(monitorBikes, config.app.interval);
