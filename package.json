@@ -1,6 +1,6 @@
 {
   "name": "iflux-publibike-event-source",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An iFLUX event source that polls the PubliBike feed and generates events for bike movements.",
   "main": "daemon.js",
   "scripts": {
@@ -25,7 +25,7 @@
   "homepage": "https://github.com/SoftEng-HEIGVD/iflux-publibike-event-source",
   "dependencies": {
     "dotenv": "^0.5.1",
-    "iflux-node-client": "~0.1.9",
+    "iflux-node-client": "~0.1.10",
     "node-rest-client": "^1.4.4",
     "underscore": "^1.8.2"
   }
