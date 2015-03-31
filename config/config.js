@@ -44,7 +44,7 @@ var config = {
 	docker: {
 		root: rootPath,
 		iflux: {
-			url: process.env.IFLUX_SERVER_URL || 'https://iflux.herokuapp.com'
+			url: process.env.IFLUX_SERVER_URL_INTERNAL || 'https://iflux.herokuapp.com'
 		},
 		app: {
 			name: 'PubliBike Events',
