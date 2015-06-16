@@ -12,7 +12,7 @@ d.on('error', function(err) {
 	console.log(err);
 });
 
-var iFluxClient = new iFluxClient(config.apiUrl, 'publibike/eventSource');
+var iFluxClient = new iFluxClient(config.apiUrl);
 var delay = 1000 * 60 * 5;
 
 var publibikeApiEndpoint = "https://www.publibike.ch/myinterfaces/terminals.fr.json?filterid=0&stationArrow=show%20all%20stations";
@@ -105,7 +105,7 @@ var monitorBikes = function () {
 			var events = [];
 
 			_.each(movements, function (movement) {
-				events.push(new Event('movementEvent', movement));
+				events.push(new Event(config.eventType, movement));
 			});
 
 			if (events.length > 0) {
