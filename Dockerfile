@@ -13,7 +13,7 @@ ADD . /nodejs/publibike
 
 RUN useradd -m -r -U publibike -u 1115 \
 	&& chown -R publibike:publibike /nodejs/publibike \
-	&& chown -R metrics:publibike /data/publibike
+	&& chown -R publibike:publibike /data/publibike
 
 USER publibike
 
