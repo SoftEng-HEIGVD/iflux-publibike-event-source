@@ -12,8 +12,7 @@ RUN mkdir -p /nodejs/publibike && cp -a /tmp/node_modules /nodejs/publibike
 ADD . /nodejs/publibike
 
 RUN useradd -m -r -U publibike -u 1115 \
-	&& chown -R publibike:publibike /nodejs/publibike \
-	&& chown -R publibike:publibike /data/publibike
+	&& chown -R publibike:publibike /nodejs/publibike
 
 USER publibike
 
