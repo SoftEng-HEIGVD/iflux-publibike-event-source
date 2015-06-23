@@ -22,19 +22,26 @@ var lastSnapshot = [];
 var poll = function (callback) {
   console.log("Polling PubliBike data...");
   restClient.get(publibikeApiEndpoint, function (data, response) {
+	  if (response.statusCode != 200) {
+		  console.log('Unable to retrieve the data from publibike. Server has returned: %s', response.statusCode);
+		  return lastSnapshot;
+	  }
 
     // PubliBike does not send application/json in the Content-type header, so rest client does not parse automatically
-    if (typeof data === "string") {
-      try {
-				data = JSON.parse(data);
-			}
-			catch (err) {
-				console.log(err);
-				return lastSnapshot;
-			}
-    }
+    try {
+			data = JSON.parse(data.toString());
+		}
+		catch (err) {
+			console.log(err);
+			return lastSnapshot;
+		}
 
     terminals = data.terminals;
+
+	  if (!terminals) {
+		  console.log('Unable to get the terminals data');
+		  return lastSnapshot;
+	  }
 
     var summary = terminals.map(function (terminal) {
       var bikeholdersfree = 0;
