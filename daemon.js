@@ -8,19 +8,19 @@ var
 	config = require('./config/config');
 
 d.on('error', function(err) {
-	console.log("Unable to poll publibike data.");
+	console.log('Unable to poll publibike data.');
 	console.log(err);
 });
 
 var iFluxClient = new iFluxClient(config.apiUrl);
 var delay = 1000 * 60 * 5;
 
-var publibikeApiEndpoint = "https://www.publibike.ch/myinterfaces/terminals.fr.json?filterid=0&stationArrow=show%20all%20stations";
+var publibikeApiEndpoint = 'https://www.publibike.ch/myinterfaces/terminals.fr.json?filterid=0&stationArrow=show%20all%20stations';
 
 var lastSnapshot = [];
 
 var poll = function (callback) {
-  console.log("Polling PubliBike data...");
+  console.log('Polling PubliBike data...');
   restClient.get(publibikeApiEndpoint, function (data, response) {
 	  if (response.statusCode != 200) {
 		  console.log('Unable to retrieve the data from publibike. Server has returned: %s', response.statusCode);
@@ -77,7 +77,7 @@ var poll = function (callback) {
     if (lastSnapshot.length === 0) {
       lastSnapshot = summary;
       return lastSnapshot;
-    };
+    }
 
     var delta = summary.reduce(function (results, terminal, index) {
       if (lastSnapshot[index].freeholders !== terminal.freeholders || lastSnapshot[index].bikes !== terminal.bikes) {
@@ -116,11 +116,11 @@ var monitorBikes = function () {
 			});
 
 			if (events.length > 0) {
-				console.log("Events to send: %s", events.length);
+				console.log('Events to send: %s', events.length);
 				iFluxClient.notifyEvents(events);
 			}
 			else {
-				console.log("No events");
+				console.log('No events');
 			}
 		});
 	});
